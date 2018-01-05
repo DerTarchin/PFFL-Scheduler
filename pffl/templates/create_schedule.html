@@ -1,0 +1,118 @@
+{% extends "base.html" %}
+{% load staticfiles %}
+
+{% block sidebar_new %}
+class="active color-g"
+{% endblock %}
+
+{% block content %}
+<div class="dual-content-style">
+	<div class="header">
+		<h1 class="page-title">new<span class="light">schedule</span></h1>
+		<span class="page-subtitle" id="part1-subtitle">Fill out the information below, then click next.</span>
+		<span class="page-subtitle" id="part2-subtitle" style="display: none">Add or import teams below, then click generate.</span>
+	</div>
+	<div class="loader" id="part3-loader" style="display: none">
+		<div class="loader-icon">
+			{% if request.user.userprofile.theme == "dark" %}
+			    <img class="loader-calendar" src="{% static 'imgs/cal_empty_dark.png' %}">
+				<img class="loader-squares" src="{% static 'svg/squares_dark.svg' %}">
+		    {% else %}
+			    {% if request.user.userprofile.theme == "both" %}
+			      {% now 'h' as hour %}
+			        {% if hour not in '10,11,12,13,14,15,16,17' %}
+				        <img class="loader-calendar" src="{% static 'imgs/cal_empty_dark.png' %}">
+						<img class="loader-squares" src="{% static 'svg/squares_dark.svg' %}">
+			        {% else %}
+				        <img class="loader-calendar" src="{% static 'imgs/cal_empty.png' %}">
+						<img class="loader-squares" src="{% static 'svg/squares.svg' %}">
+			        {% endif %}
+			    {% endif %}
+		    {% endif %}
+		</div>
+	</div>
+	<div class="schedule-info" id="part1-info">
+		<div style="margin: auto; width: 100%;">
+			<table>
+				<tr><td class="info-label">Name</td><td><input type="text" name="name" placeholder="Untitled"></td></tr>
+				<tr><td class="info-label">Season</td>
+					<td>
+						<select name="season">
+						</select>
+					</td>
+				</tr>
+				<tr><td class="info-label">Year</td>
+					<td>
+						<select name="year">
+						</select>
+					</td>
+				</tr>
+				<tr><td class="info-label"></td><td>&nbsp;</td></tr>
+				<tr><td class="info-label">Total Games</td><td><input type="number" name="total" min="0" value="10"></td></tr>
+				<tr><td class="info-label">Games to Generate</td><td><input name="to_gen" type="number" min="1" value="6"></td></tr>
+				<tr><td class="info-label">Matching Method</td>
+					<td>
+						<select name="algo">
+							<option value="0">Match outside of division</option>
+							<option value="1">Match within division</option>
+							<option value="2">Match randomly</option>
+						</select>
+					</td>
+				</tr>
+				<input type="hidden" name="override" value="true">
+			</table>
+			<div style="display: flex; align-items: center; justify-content: center; width: 100%;" class="control-group-container">
+				<a class="control-group color-gray noselect" href="{% url 'home' %}">Cancel</a>
+				<div class="control-group color-g heavy toggleLink noselect" toggleHide="part1-info part1-subtitle" toggleShow="part2-subtitle part2-content">Next</div>
+			</div>
+		</div>
+	</div>
+	<div style="display: none;" id="part2-content">
+		<div class="controls">
+			<ul class="control-group-container">
+				<li class="control-group color-p toggleLink noselect" toggleHide="part2-content part2-subtitle" toggleShow="part1-subtitle part1-info">Info</li>
+				<li class="control-group color-b noselect">
+					<form  url="{% url 'import_sheet' %}" class="no-smoothState" id="import_form"><input type="text" placeholder="Google Sheets URL" class="hidden-input"><span class="hidden-input-toggle">Import</span></form>
+				</li>
+				<li class="control-group color-g generate heavy noselect" url="{% url 'generate' %}" return-url="{% url 'view_schedule' 0 %}">Generate</li>
+			</ul>
+		</div>
+		<div class="table-schedule-container">
+			<table class="table table-striped table-schedule table-schedule-new">
+				<thead>
+					<tr>
+						<td head-type="team">Team</td>
+						<td head-type="con">Conferance</td>
+						<td head-type="div">Division</td>
+						<td head-type="rank">Rank</td>
+						<td></td>
+					</tr>
+				</thead>
+				<tbody>
+					<tr class="input-row">
+						<form id="add_team" class="no-smoothState">
+							<td class="input-cell" input-type=team>
+								<span><input type="text" name="new-name" placeholder="Add a team"></span>
+							</td>
+							<td class="input-cell" input-type=con>
+								<span><input type="text" name="new-con" placeholder="Assign a conferance"></span>
+							</td>
+							<td class="input-cell" input-type=div>
+								<span><input type="text" name="new-div" placeholder="Assign a division"></span>
+							</td>
+							<td class="input-cell" input-type=rank>
+								<span><input type="number" min="1" name="new-rank" placeholder="Assign a rank"></span>
+							</td>
+							<td data-type="action" data-value="add_row">
+								<div><div><button class="btn" type="submit">+</button></div></div>
+							</td>
+						</form>
+					</tr>
+				</tbody>
+			</table>
+		</div>
+	</div>
+</div>
+<script src="{% static 'js/page_create.js' %}"></script>
+<script src="{% static 'js/schedule.js' %}"></script>
+{% endblock %}

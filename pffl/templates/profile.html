@@ -1,0 +1,77 @@
+{% extends "base.html" %}
+{% load staticfiles %}
+
+{% block sidebar_profile %}
+class="active color-b"
+{% endblock %}
+
+{% block content %}
+<div class="dual-content-style">
+	<div class="header">
+		<h1 class="page-title">Profile<span class="light">Settings</span></h1>
+	</div>
+	<div class="schedule-info">
+		<div style="margin: auto; width: 100%;">
+			<form method="POST" url="{% url 'profile' %}">
+				<table>
+					<tr><td class="info-label">First Name</td><td><input type="text" name="fname" placeholder="First Name" value="{{ user.first_name }}"></td></tr>
+					<tr><td class="info-label">Last Name</td><td><input type="text" name="lname" placeholder="Last Name" value="{{ user.last_name }}"></td></tr>
+					<tr><td class="info-label">Company/Affiliation</td>
+						<td>
+							<select name="affiliation">
+								<option {% if request.user.userprofile.affiliation == "pffl" %}selected{% endif %} value="pffl">Pittsburgh Flag Football League</option>
+							</select>
+						</td>
+					</tr>
+					{% if user.username and user.username != user.email %}
+					<tr><td class="info-label">Username</td><td><input type="text" name="username" disabled placeholder="Username" value="{{ user.username }}"></td></tr>
+					{% else %}
+						<input type="hidden" name="username" value="{{ user.username }}">
+					{% endif %}
+					<tr><td class="info-label">Email</td><td><input type="email" name="email" placeholder="Email" value="{{ user.email }}" disabled></td></tr>
+					<tr><td class="info-label">Theme</td>
+						<td>
+							<select name="theme">
+								<option {% if request.user.userprofile.theme == "light" %}selected{% endif %} value="light">Light</option>
+								<option {% if request.user.userprofile.theme == "dark" %}selected{% endif %} value="dark">Dark</option>
+								<option {% if request.user.userprofile.theme == "both" %}selected{% endif %} value="both">Based on time</option>
+							</select>
+						</td>
+					</tr>
+					
+					<tr><td class="info-label"></td><td>&nbsp;</td></tr>
+					
+					<tr>
+						<td class="info-label">Google Drive</td>
+						<td style="display: flex; justify-content: space-between; align-items: center;">
+							{% if authorized %}
+								<span style="color: #8fc942">connected</span>
+							{% else %}
+								not connected <a class="control-group color-g noselect" style="margin:0; color: #8fc942;" href="{% url 'auth' %}">Connect</a>
+							{% endif %}
+						</td>
+					</tr>
+					<tr><td class="info-label">Subscription Ends</td><td>
+					{% if request.user.userprofile.subscription %}
+						{{ request.user.userprofile.subscription }}
+					{% else %}
+						<em>No Subscription</em>
+					{% endif %}
+					</td></tr>
+
+					{% if error_message %}
+						<script type="text/javascript">
+							setTimeout(function() { alert('{{ error_message }}') }, 250);
+						</script>
+					{% endif %}
+				</table>
+				<div style="display: flex; align-items: center; justify-content: center; width: 100%;" class="control-group-container">
+					<a class="control-group color-gray noselect" href="{% url 'profile' %}">Cancel</a>
+					<button class="control-group color-b heavy noselect" type="submit">Save</button>
+				</div>
+				{% csrf_token %}
+			</form>
+		</div>
+	</div>
+</div>
+{% endblock %}

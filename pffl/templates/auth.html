@@ -1,0 +1,19 @@
+{% extends "base.html" %}
+{% load staticfiles %}
+
+{% block sidebar %}
+<ul class="nav nav-sidebar">
+	<li><a href="{% url 'home' %}">Overview</a></li>
+	<li><a href="{% url 'create_schedule' %}">Create New</a></li>
+	<li class="active"><a href="{% url 'auth' %}">Authorize</a></li>
+	<!-- <li><a href="#">Export</a></li> -->
+</ul>
+{% endblock %}
+
+{% block content %}
+{% if success == 'true' %}
+Your account has been linked to Google.
+{% else %}
+Your account has been denied access by Google. Try again?
+{% endif %}
+{% endblock %}

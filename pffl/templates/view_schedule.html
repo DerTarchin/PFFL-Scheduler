@@ -1,0 +1,57 @@
+{% extends "base.html" %}
+{% load staticfiles %}
+
+{% block content %}
+{% if error %}
+	{{ error }}
+{% else %}
+	<div class="dual-content-style">
+		<div class="header">
+			<h1 class="page-title">{{ schedule.season }}<span class="light">{{ schedule.year }}</span></h1>
+			<span class="page-subtitle">{{ schedule.name }}</span>
+		</div>
+		<div style="overflow: auto; height: 100%;">
+			<div class="controls">
+				<ul class="control-group-container">
+					<li class="control-group color-p noselect" url="{% url 'export_schedule' schedule.id %}" id="export">Export</li>
+				</ul>
+			</div>
+			<div class="table-schedule-container">
+				<div class="table-responsive">
+					<table class="table table-striped table-schedule">
+						<thead>
+							<td head-type="team">Team</td>
+							<td head-type="con">Conferance</td>
+							<td head-type="div">Division</td>
+							<td head-type="rank">Rank</td>
+							{% for match_num in num_matches %}
+								<td head-type="match">Match {{ match_num }}</td>
+							{% endfor %}
+						</thead>
+						<tbody>
+							{% for row in table %}
+								<tr>
+									<td data-type="team" data-value="{{ row.team.team.name.lower }}"><span><span>{{ row.team.team.name }}</span></span></td>
+									<td data-type="con" data-value="{{ row.team.conferance.name.lower }}"><span>{{ row.team.conferance.name }}</span></td>
+									<td data-type="div" data-value="{{ row.team.division.name.lower }}"><span>{{ row.team.division.name }}</span></td>
+									<td data-type="rank" data-value="{{ row.team.rank.value }}"><div><div>{{ row.team.rank.value }}</div></div></td>
+
+									{% for opp in row.matches %}
+										{% if opp %}
+											<td class="hide-match-type" data-type="all" team-value="{{ opp.team.name.lower }}" con-value="{{ opp.conferance.name.lower }}" div-value="{{ opp.division.name.lower }}" rank-value="{{ opp.rank.value }}"><span><span>{{ opp.team }}</span></span></td>
+										{% else %}
+											<td></td>
+										{% endif %}
+									{% endfor %}
+								</tr>
+							{% endfor %}
+						</tbody>
+					</table>
+				</div>
+			</div>
+		</div>
+	</div>
+{% endif %}
+<script src="{% static 'js/page_view.js' %}"></script>
+<script src="{% static 'js/schedule.js' %}"></script>
+{% endblock %}

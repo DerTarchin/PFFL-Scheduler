@@ -1,0 +1,66 @@
+{% extends "base.html" %}
+{% load staticfiles %}
+
+{% block sidebar_home %}
+class="active color-p"
+{% endblock %}
+
+{% block content %}
+<!-- 	<script type="text/javascript">
+		$('.nav-sidebar li').removeClass('active');
+		$('.nav-sidebar a#sidebar_home').parent().addClass('active');
+	</script> -->
+	<!-- <h1 class="page-header">Home</h1>
+
+	  <div class="row placeholders">
+	    <div class="col-xs-6 col-sm-3 placeholder">
+	      <img src="data:image/gif;base64,R0lGODlhAQABAIAAAHd3dwAAACH5BAAAAAAALAAAAAABAAEAAAICRAEAOw==" width="200" height="200" class="img-responsive" alt="Generic placeholder thumbnail">
+	      <h4>Label</h4>
+	      <span class="text-muted">Something else</span>
+	    </div>
+	    <div class="col-xs-6 col-sm-3 placeholder">
+	      <img src="data:image/gif;base64,R0lGODlhAQABAIAAAHd3dwAAACH5BAAAAAAALAAAAAABAAEAAAICRAEAOw==" width="200" height="200" class="img-responsive" alt="Generic placeholder thumbnail">
+	      <h4>Label</h4>
+	      <span class="text-muted">Something else</span>
+	    </div>
+	    <div class="col-xs-6 col-sm-3 placeholder">
+	      <img src="data:image/gif;base64,R0lGODlhAQABAIAAAHd3dwAAACH5BAAAAAAALAAAAAABAAEAAAICRAEAOw==" width="200" height="200" class="img-responsive" alt="Generic placeholder thumbnail">
+	      <h4>Label</h4>
+	      <span class="text-muted">Something else</span>
+	    </div>
+	    <div class="col-xs-6 col-sm-3 placeholder">
+	      <img src="data:image/gif;base64,R0lGODlhAQABAIAAAHd3dwAAACH5BAAAAAAALAAAAAABAAEAAAICRAEAOw==" width="200" height="200" class="img-responsive" alt="Generic placeholder thumbnail">
+	      <h4>Label</h4>
+	      <span class="text-muted">Something else</span>
+	    </div>
+	  </div> -->
+
+	  <h2 class="sub-header" style="text-transform: uppercase; text-align: center;">View Schedules</h2>
+	  <style>
+	  		.schedule-list > li {
+	  			background-image: url('{% static "imgs/cal_empty.png" %}');
+	  		}
+	  		body.dark .schedule-list > li {
+	  			background-image: url('{% static "imgs/cal_empty_dark.png" %}');
+	  		}
+  	</style>
+  	<ul class="schedule-list">
+	  	{% for schedule in schedules %}
+		  	<li>
+		  		<a href="{% url 'view_schedule' schedule.id %}">
+					<div>
+						<div class="main-text">
+							{% if schedule.season.lower == 'fall' or schedule.season.lower == 'winter' %}
+								<span class="season">{{ schedule.season.upper.0 }}</span>
+							{% else %}
+								<span class="season">{{ schedule.season.upper.0 }}{{ schedule.season.lower.1 }}</span>
+							{% endif %}
+							<span class="year">{{ schedule.year|get_digit:2 }}{{ schedule.year|get_digit:1 }}</span>
+						</div>
+						<div class="title">{{ schedule.name }}</div>
+					</div>
+			  	</a>
+		  	</li>
+	  	{% endfor %}
+	  </ul>
+{% endblock %}
